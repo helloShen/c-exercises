@@ -1,0 +1,149 @@
+#!/bin/sh
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+
+### config (修改这部分参数以运行不同的练习）
+CHAPTER="chapter4"
+NAME="calc"
+SRC_FILE="${NAME}.c"
+BIN_FILE="${NAME}.o"
+
+
+### compile
+#gcc -iquote"${SRC_DIR}" -o "${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+
+### run
+#"${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${TEST_DIR}/${NAME}"
+
+###################################################
+#  标准计算器程序
+#  	calc.c:		计算逻辑
+#	stack.c:	提供栈容器服务
+#	getop.c:	从输入读取下一个操作数或字符
+#	getch.c:	带缓冲区的读取下一个字符服务
+###################################################
+### path
+BIN="${BIN_DIR}/${CHAPTER}"
+SRC="${SRC_DIR}/${CHAPTER}"
+TEST="${TEST_DIR}/${CHAPTER}"
+
+### module
+CALC_C="${SRC}/calc.c"
+CALC_O="${BIN}/calc.o"
+
+STACK_C="${SRC}/stack.c"
+STACK_O="${BIN}/stack.o"
+
+GETOP_C="${SRC}/getop.c"
+GETOP_O="${BIN}/getop.o"
+
+GETCH_C="${SRC}/getch.c"
+GETCH_O="${BIN}/getch.o"
+
+### 分别编译4个库
+### -c 告诉编译器，这个文件没有main入口，只是库
+gcc -iquote"${SRC}" -c ${GETCH_C} -o ${GETCH_O}
+gcc -iquote"${SRC}" -c ${GETOP_C} -o ${GETOP_O} 
+gcc -iquote"${SRC}" -c ${STACK_C} -o ${STACK_O}
+gcc -iquote"${SRC}" -c ${CALC_C} -o ${CALC_O}
+
+### 链接成一个可执行文件
+## 书上的标准加减乘除计算器
+STDEXE="${BIN}/stdcalc.o"
+##编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${STDEXE} ${GETCH_O} ${GETOP_O} ${STACK_O} ${CALC_O} 
+
+### run
+STDTXT="${TEST}/stdcalc.txt"
+#${STDEXE} < ${STDTXT}
+
+###################################################
+#  4.3
+#  带取模运算的计算器程序添加两个组件：
+#  	modcalc.c:	添加对取模（%）运算的支持
+#	modgetop.c:	能处理负数
+###################################################
+
+### 新组件
+MCALC_C="${SRC}/4-3.c"
+MCALC_O="${BIN}/4-3.o"
+
+MGETOP_C="${SRC}/modgetop.c"
+MGETOP_O="${BIN}/modgetop.o"
+
+### 单独编译新组件
+gcc -iquote"${SRC}" -c ${MGETOP_C} -o ${MGETOP_O} 
+gcc -iquote"${SRC}" -c ${MCALC_C} -o ${MCALC_O}
+
+## 带%取模运算的计算器（便以前先取消主入口的注释）
+MODEXE="${BIN}/modcalc.o"
+## 编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${MODEXE} ${GETCH_O} ${GETOP_O} ${STACK_O} ${CALC_O} ${MCALC_O} ${MGETOP_O}
+
+### run
+MODTXT="${TEST}/modcalc.txt"
+#${MODEXE} < ${MODTXT}
+
+###################################################
+#  4.4
+#  扩展stack.c栈容器的功能
+#  	stackexp.c:
+#		printtop(): 打印栈顶元素
+#		seek(): 复制栈顶元素
+# 		swap(): 交换栈顶的两个元素
+#		clear(): 清空栈
+#  老的push()和pop()操作还是保留在stack.c
+#  stackexp.c只是stack.c的补丁，和stack.c共享内存
+###################################################
+
+### 新组件
+STACKEXP_C="${SRC}/stackexp.c"
+STACKEXP_O="${BIN}/stackexp.o"
+
+EXPSTACK_C="${SRC}/4-4.c"
+EXPSTACK_O="${BIN}/4-4.o"
+
+### 单独编译新组件
+#gcc -iquote"${SRC}" -c ${STACKEXP_C} -o ${STACKEXP_O}
+
+### 链接成一个可执行文件
+### 编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${EXPSTACK_O} ${STACK_O} ${STACKEXP_O} ${EXPSTACK_C}
+
+### 运行
+#${EXPSTACK_O}
+
+###################################################
+#  4.5
+#  扩展计算器功能:
+#	sin(x): 打印栈顶元素
+#	exp(x): 复制栈顶元素
+# 	pow(x,y): 交换栈顶的两个元素
+#  老的push()和pop()操作还是保留在stack.c
+#  stackexp.c只是stack.c的补丁，和stack.c共享内存
+###################################################
+
+### 新组件
+CALC45_C="${SRC}/4-5.c"
+CALC45_O="${BIN}/4-5.o"
+
+GETOP45_C="${SRC}/getop45.c"
+GETOP45_O="${BIN}/getop45.o"
+
+### 单独编译新组件
+gcc -iquote"${SRC}" -c ${GETOP45_C} -o ${GETOP45_O}
+gcc -iquote"${SRC}" -c ${CALC45_C} -o ${CALC45_O}
+
+### 链接成一个可执行文件
+### 编译前先取消主入口的注释，然后注释掉其他主入口
+EXEC_45="${SRC}/4-5.out"
+
+gcc -iquote"${SRC}" -o ${EXEC_45} ${CALC45_O} ${GETOP45_O} ${STACK_O} ${STACKEXP_O} ${GETCH_O} 
+
+### 运行
+TEST45="${TEST}/4-5.txt"
+${EXEC_45} < ${TEST45}

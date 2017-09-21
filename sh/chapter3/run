@@ -1,0 +1,21 @@
+#!/bin/sh
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+
+### config (修改这部分参数以运行不同的练习）
+CHAPTER="chapter3"
+NAME="3-1"
+SRC_FILE="${NAME}.c"
+BIN_FILE="${NAME}.o"
+
+
+### compile
+gcc -iquote"${SRC_DIR}" -o "${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+
+### run
+"${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${TEST_DIR}/${NAME}"
+

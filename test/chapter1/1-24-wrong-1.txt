@@ -1,0 +1,108 @@
+#include "mystd.h"
+
+// 符号常量不变（3）
+static const char QUOTE = '\"';
+static const char APOSTROPHE = '\'';
+static const char SLASH = '/';
+static const char ANTI_SLASH = '\\';
+static const char ASTERISK = '*';
+static const char ENTER = '\n';
+static const char LEFT_BRACE = '{';
+static const char RIGHT_BRACE = '}';
+static const char LEFT_BRACKET = '[';
+static const char RIGHT_BRACKET = ']';
+static const char LEFT_PARENTHESE = '(';
+static const char RIGHT_PARENTHESE = ')';
+
+// 结果常量（17）
+static const int T = 1;
+static const int F = 0;
+
+/* 主入口 */（21）
+int main(void) {
+    int res = check(getchar());
+    if (res == T) {
+        printf("The file is OK!");
+    } else {
+        printf("The file is wrong!");
+    }
+}
+
+// 用数组模仿Stack（31）
+static const int MAX = 1000;
+static int stack[MAX];
+static int cursor = 0;
+
+/* 文件尾，检查是否所有括号都配对了 */（36）
+static int eof() {
+    if (cursor == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+/* 状态机主调度 */（44）
+static int check(char c) {
+    if (c == EOF) { return eof(); } // base case
+    if (c == QUOTE || c == APOSTROPHE) {
+        return inQuote(c);
+    } else if (c == SLASH) {
+        char d = getchar();
+        if (d == ASTERISK) {
+            return inHardComment();
+        } else if (d == SLASH) {
+            return inSoftComment(; // 54行括号没关闭
+        } else {
+            return check(d);
+        }
+    } else if (c == LEFT_BRACE || c == LEFT_BRACKET || c == LEFT_PARENTHESE) {
+        if (cursor == MAX) { printf("My Stack Overflow!\n"); return; }
+        if (c == LEFT_BRACE) { stack[cursor++] = RIGHT_BRACE; }
+        if (c == LEFT_BRACKET) { stack[cursor++] = RIGHT_BRACKET; }
+        if (c == LEFT_PARENTHESE) { stack[cursor++] = RIGHT_PARENTHESE; }
+        return check(getchar());
+    } else if (c == RIGHT_BRACE || c == RIGHT_BRACKET || c == RIGHT_PARENTHESE) {
+        if (cursor == 0) { return F; } // 括号不匹配
+        if (stack[--cursor] == c) {
+            return check(getchar());
+        } else { // 括号不匹配
+            return F;
+        }
+    }
+}
+
+/* 跳过检查，直到单行注释尾 */
+static int inSoftComment(void) {
+    char c;
+    while ((c == getchar()) != EOF) {
+        if (c == ENTER) { return check(getchar()); } // 回车终止单行注释
+    }
+    return eof();
+}
+
+/* 跳过检查，直到多行注释尾 */
+static int inHardComment(void) {
+    char c, d;
+    c = getchar();
+    while (c != EOF && (d = getchar()) != EOF) {
+        if (c == ASTERISK && d == SLASH) {
+            return check(getchar()); // 星号加一个斜杠，结束多行注释
+        } else {
+            c = d;
+        }
+    }
+    return eof();
+}
+
+/* 跳过检查，直到字符串尾 */
+static int inQuote(char begin) {
+    char c, d;
+    while ((c = getchar()) != EOF) {
+        if (c == ANTI_SLASH) {
+            if ((d = getchar()) == EOF) { return; }
+        } else if (c == begin) { // 单引号或者双引号结束字符串
+            return check(getchar());
+        }
+    }
+    return eof();
+}

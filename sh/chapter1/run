@@ -1,0 +1,61 @@
+#!/bin/sh
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+
+### config (修改这部分参数以运行不同的练习）
+CHAPTER="chapter1"
+NAME="1-1"
+SRC_FILE="${NAME}.c"
+BIN_FILE="${NAME}.o"
+
+
+### compile
+gcc -iquote"${SRC_DIR}" -o "${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+
+### run
+"${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${TEST_DIR}/${NAME}"
+
+#################################### 
+# Chapter 1 - Special Run
+#################################### 
+### 1-8
+#"${BIN_DIR}/chapter1/1-8.o" < "${TEST_DIR}/1-8.txt"
+### 1-9
+#"${BIN_DIR}/chapter1/1-9.o" < "${TEST_DIR}/1-8.txt"
+### 1-10
+#"${BIN_DIR}/chapter1/1-10.o" < "${TEST_DIR}/1-8.txt"
+### 1-12
+#"${BIN_DIR}/chapter1/1-12.o" < "${TEST_DIR}/1-8.txt"
+### 1-13
+#"${BIN_DIR}/chapter1/1-13.o" < "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+### 1-14
+#"${BIN_DIR}/chapter1/1-14.o" < "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+### 1-16
+#"${BIN_DIR}/chapter1/1-16-2.o" < "${TEST_DIR}/1-16.txt"
+### 1-17
+#"${BIN_DIR}/chapter1/1-17.o" < "${TEST_DIR}/1-16.txt"
+### 1-18
+#"${BIN_DIR}/chapter1/1-18.o" < "${TEST_DIR}/1-18.txt"
+### 1-19
+#"${BIN_DIR}/chapter1/1-19.o" < "${TEST_DIR}/1-18.txt"
+### 1-20
+#"${BIN_DIR}/chapter1/1-20.o" < "${TEST_DIR}/1-20.txt"
+#"${BIN_DIR}/chapter1/1-20-2.o" < "${TEST_DIR}/1-20.txt"
+### 1-21
+#"${BIN_DIR}/chapter1/1-21-anti.o" < "${TEST_DIR}/1-21.txt"
+#"${BIN_DIR}/chapter1/1-21.o" < "${TEST_DIR}/1-21.txt"
+#"${BIN_DIR}/chapter1/1-21-2.o" < "${TEST_DIR}/1-21.txt"
+### 1-22
+#"${BIN_DIR}/chapter1/1-22.o" < "${TEST_DIR}/1-21.txt"
+### 1-23
+#"${BIN_DIR}/chapter1/1-23.o" < "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+#"${BIN_DIR}/chapter1/1-23-2.o" < "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+### 1-24
+#"${BIN_DIR}/chapter1/1-24.o" < "${TEST_DIR}/1-24-right.txt"
+#"${BIN_DIR}/chapter1/1-24.o" < "${TEST_DIR}/1-24-wrong-1.txt"
+#"${BIN_DIR}/chapter1/1-24.o" < "${TEST_DIR}/1-24-wrong-2.txt"
+
