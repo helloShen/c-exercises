@@ -1,0 +1,281 @@
+#!/bin/sh
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+CHAPTER="chapter5"
+
+### path
+BIN="${BIN_DIR}/${CHAPTER}"
+SRC="${SRC_DIR}/${CHAPTER}"
+TEST="${TEST_DIR}/${CHAPTER}"
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+CHAPTER="chapter5"
+
+### path
+BIN="${BIN_DIR}/${CHAPTER}"
+SRC="${SRC_DIR}/${CHAPTER}"
+TEST="${TEST_DIR}/${CHAPTER}"
+
+#################################################
+# 练习5-1
+# 把+-好塞回标准输入
+#################################################
+### 新组件
+ONE_C="${SRC}/5-1.c"
+ONE_O="${BIN}/5-1.o"
+GETCH_C="${SRC}/getch.c"
+GETCH_O="${SRC}/getch.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${ONE_C} -o ${ONE_O}
+#gcc -iquote"${SRC}" -c ${GETCH_C} -o ${GETCH_O}
+
+### 连接成可执行文件
+ONE="${BIN}/5-1.exe"
+
+#gcc -iquote"${SRC}" -o ${ONE} ${ONE_O} ${GETCH_O}
+
+### 运行
+#${ONE}
+
+#################################################
+# 练习5-2
+# getfloat()
+#################################################
+### 新组件
+TWO_C="${SRC}/5-2.c"
+TWO_O="${BIN}/5-2.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${TWO_C} -o ${TWO_O}
+
+### 连接成可执行文件
+TWO="${BIN}/5-2.exe"
+
+#gcc -iquote"${SRC}" -o ${TWO} ${TWO_O} ${GETCH_O}
+
+### 运行
+#${TWO}
+
+
+#################################################
+# 练习5-3
+# 先测试foo(char s[])用数组做参数能否通过编译
+#################################################
+
+### 新组件
+THREE_C="${SRC}/5-3.c"
+THREE_O="${BIN}/5-3.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${THREE_C} -o ${THREE_O}
+
+### 连接成可执行文件
+THREE="${BIN}/5-3.exe"
+
+#gcc -iquote"${SRC}" -o ${THREE} ${THREE_O}
+
+### 运行
+#${THREE}
+
+####################################################
+# 练习5-4: strend(s,t)函数
+# 如果字符串t出现在字符串s的尾部，返回1，否则返回0
+####################################################
+
+### 新组件
+FOUR_C="${SRC}/5-4.c"
+FOUR_O="${BIN}/5-4.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${FOUR_C} -o ${FOUR_O}
+
+### 连接成可执行文件
+FOUR="${BIN}/5-4.exe"
+
+#gcc -iquote"${SRC}" -o ${FOUR} ${FOUR_O}
+
+### 运行
+#${FOUR}
+
+####################################################
+# 练习5-5: 
+# 实现strncpy(),strncat(),strncmp()
+####################################################
+
+### 新组件
+FIVE_C="${SRC}/5-5.c"
+FIVE_O="${BIN}/5-5.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${FIVE_C} -o ${FIVE_O}
+
+### 连接成可执行文件
+FIVE="${BIN}/5-5.exe"
+
+#gcc -iquote"${SRC}" -o ${FIVE} ${FIVE_O}
+
+### 运行
+#${FIVE}
+
+##########################################################
+# 练习5-6: 
+# 用指针替代数组索引实现getline(), atoi(), itoa()
+# 以及reverse(), strindex(), getop()
+##########################################################
+
+### 新组件
+SIX_C="${SRC}/5-6.c"
+SIX_O="${BIN}/5-6.o"
+
+### 单独编译组件
+gcc -iquote"${SRC}" -c ${SIX_C} -o ${SIX_O}
+
+### 连接成可执行文件
+SIX="${BIN}/5-6.exe"
+
+gcc -iquote"${SRC}" -o ${SIX} ${SIX_O}
+
+### 运行
+TEST_SIX="${TEST}/5-6.txt"
+${SIX} < ${TEST_SIX}
+
+
+
+
+
+#################################################
+# 练习5-1
+# 把+-好塞回标准输入
+#################################################
+### 新组件
+ONE_C="${SRC}/5-1.c"
+ONE_O="${BIN}/5-1.o"
+GETCH_C="${SRC}/getch.c"
+GETCH_O="${SRC}/getch.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${ONE_C} -o ${ONE_O}
+#gcc -iquote"${SRC}" -c ${GETCH_C} -o ${GETCH_O}
+
+### 连接成可执行文件
+ONE="${BIN}/5-1.exe"
+
+#gcc -iquote"${SRC}" -o ${ONE} ${ONE_O} ${GETCH_O}
+
+### 运行
+#${ONE}
+
+#################################################
+# 练习5-2
+# getfloat()
+#################################################
+### 新组件
+TWO_C="${SRC}/5-2.c"
+TWO_O="${BIN}/5-2.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${TWO_C} -o ${TWO_O}
+
+### 连接成可执行文件
+TWO="${BIN}/5-2.exe"
+
+#gcc -iquote"${SRC}" -o ${TWO} ${TWO_O} ${GETCH_O}
+
+### 运行
+#${TWO}
+
+
+#################################################
+# 练习5-3
+# 先测试foo(char s[])用数组做参数能否通过编译
+#################################################
+
+### 新组件
+THREE_C="${SRC}/5-3.c"
+THREE_O="${BIN}/5-3.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${THREE_C} -o ${THREE_O}
+
+### 连接成可执行文件
+THREE="${BIN}/5-3.exe"
+
+#gcc -iquote"${SRC}" -o ${THREE} ${THREE_O}
+
+### 运行
+#${THREE}
+
+####################################################
+# 练习5-4: strend(s,t)函数
+# 如果字符串t出现在字符串s的尾部，返回1，否则返回0
+####################################################
+
+### 新组件
+FOUR_C="${SRC}/5-4.c"
+FOUR_O="${BIN}/5-4.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${FOUR_C} -o ${FOUR_O}
+
+### 连接成可执行文件
+FOUR="${BIN}/5-4.exe"
+
+#gcc -iquote"${SRC}" -o ${FOUR} ${FOUR_O}
+
+### 运行
+#${FOUR}
+
+####################################################
+# 练习5-5: 
+# 实现strncpy(),strncat(),strncmp()
+####################################################
+
+### 新组件
+FIVE_C="${SRC}/5-5.c"
+FIVE_O="${BIN}/5-5.o"
+
+### 单独编译组件
+#gcc -iquote"${SRC}" -c ${FIVE_C} -o ${FIVE_O}
+
+### 连接成可执行文件
+FIVE="${BIN}/5-5.exe"
+
+#gcc -iquote"${SRC}" -o ${FIVE} ${FIVE_O}
+
+### 运行
+#${FIVE}
+
+##########################################################
+# 练习5-6: 
+# 用指针替代数组索引实现getline(), atoi(), itoa()
+# 以及reverse(), strindex(), getop()
+##########################################################
+
+### 新组件
+SIX_C="${SRC}/5-6.c"
+SIX_O="${BIN}/5-6.o"
+
+### 单独编译组件
+gcc -iquote"${SRC}" -c ${SIX_C} -o ${SIX_O}
+
+### 连接成可执行文件
+SIX="${BIN}/5-6.exe"
+
+gcc -iquote"${SRC}" -o ${SIX} ${SIX_O}
+
+### 运行
+TEST_SIX="${TEST}/5-6.txt"
+${SIX} < ${TEST_SIX}
+
+
+
+
