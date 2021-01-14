@@ -3,7 +3,7 @@
  * 答案还是不能处理Integer.MIN_VALUE.
  * 我的版本可以。
  ***********************************************/
-#include "mystd.h"
+#include <stdio.h>
 
 static void itob(int n, char *s, int b);
 static void reverse(char *s, int from, int to);

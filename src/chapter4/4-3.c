@@ -1,70 +1,67 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "calc.h"
+/**
+ * 练习4-3
+ * 为最简单的逆波兰计算器扩展一个取模(%)运算
+ * 需要用到的组件，在simplecalac.h头文件里都声明了
+ */
 
-/** define的字符常量，此文件范围都有效 */
-#define MAXOP 100   // 交给getop()函数去装下一个操作数的数组s的最大长度
+#include <stdio.h>          // printf()函数需要此库
+#include <stdlib.h>         // atof()函数需要此库
+#include <math.h>           // ceil()函数需要此库
+#include "4-3.h"            // 包含calc.h，以及练习4-3的补充内容
 
-/** 服务接口在calc.h里声明 */
+#define SIZE 100
+
+static char s[SIZE];   // 用来从getop()获取操作数
+static char c;          // getop()的返回值
+static double x,y;     // 缓存弹出的两个操作数
+
 
 /**
- * 主入口直接调用calc()服务
- * 编译的时候有其他主入口的时候，注销这个入口
+ * 主入口
+ * 对于正整数 p 和整数 a,b，定义如下运算：
+ *      取模运算：a % p（或a mod p），表示a除以p的余数。
  */
-/*
 int main(void) {
-    modcalc();
-}
-*/
-
-/**
- * 计算一个算术式的结果
- * 每一行记录是一个算数式（有回车就算一行）
- */
-void modcalc(void) {
-    /* 局部变量只声明，不初始化 */
-    int type;       // getop()返回的取到的下一个操作符的类型
-    double op1,op2; // 遇到 "+-*/" 操作符，用来缓存从Stack里弹出的两个操作数
-    char s[MAXOP];  // 交给getop()取下一个操作符的数组容器
-
-    while ((type = modgetop(s)) != EOF) {
-        switch(type) {
-            case NUMBER:
+    while ((c = getopneg(s)) != EOF) {
+        switch(c) {
+            case NUM:
                 push(atof(s));
+                printf("get number: %f\n",atof(s));
                 break;
             case '+':
-                op2 = pop(); op1 = pop();
-                push(op1 + op2);
-                break;
+                push(pop() + pop()); break;
             case '-':
-                op2 = pop(); op1 = pop();
-                push(op1 - op2);
-                break;
+                y = pop(); x = pop();
+                push(x - y); break;
             case '*':
-                op2 = pop(); op1 = pop();
-                push(op1 * op2);
-                break;
+                push(pop() * pop()); break;
             case '/':
-                op2 = pop(); op1 = pop();
-                if (op2 != 0.0) {
-                    push(op1 / op2);
-                } else {
-                    printf("error: zero divisor\n");
+                y = pop();
+                if (y == 0) {
+                    printf("calc: Zero cannot be used as divisor!\n");
+                    enter(); break;
                 }
-                break;
-            case '%':
-                op2 = pop(); op1 = pop();
-                if (op2 != 0.0) {
-                    push(op1 - op1 / op2);
-                } else {
-                    printf("error: zero divisor\n");
+                x = pop();
+                push(x / y); break;
+            case '%':           // 加入处理'%'的逻辑
+                y = pop();
+                if (y == 0.0) {
+                    printf("calc: Zero cannot be used as divisor!\n");
+                    enter(); break;
                 }
-                break;
+                push(fmod(pop(),y)); break;
             case '\n':
-                printf("\t%.8g\n",pop());
-                break;
+                printf("%.8f\n", pop()); break;
             default:
-                printf("error: unknown command [number:%s], [type:%d]\n",s,type);
+                printf("simplecalc: Commend <%c> Error!\n", c);
         }
     }
+}
+
+void enter(void) {
+    char c;
+    while ((c = getch()) != '\n') {
+        if (c == EOF) { ungetch(c); break; }
+    }
+    empty();
 }

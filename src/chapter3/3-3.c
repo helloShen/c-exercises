@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include <stdio.h>
 
 static void expand(char *s1, char *s2);
 static void betterExpand(char *s1, char*s2);

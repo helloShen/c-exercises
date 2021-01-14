@@ -1,62 +1,53 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "calc.h"
+/****************************************************************
+ * 书上最简单的逆波兰计算器，只有加减乘除功能
+ * 假设输入公式格式正确
+ ***************************************************************/
 
-/** define的字符常量，此文件范围都有效 */
-#define MAXOP 100   // 交给getop()函数去装下一个操作数的数组s的最大长度
+#include <stdio.h>          // printf()函数需要此库
+#include <stdlib.h>         // atof()函数需要此库
+#include "calc.h"           // 使用不带检查输入的简单工具包
 
-/** 服务接口在calc.h里声明 */
+#define SIZE 100
+
+static char s[SIZE];    // 用来从getop()获取操作数
+static char c;          // getop()的返回值
+static double x,y;      // 缓存弹出的两个操作数
 
 /**
- * 主入口直接调用calc()服务
- * 编译的时候有其他主入口的时候，注销这个入口
+ * 主入口
  */
-/*
 int main(void) {
-    calc();
-}
-*/
-
-/**
- * 计算一个算术式的结果
- * 每一行记录是一个算数式（有回车就算一行）
- */
-void calc(void) {
-    /* 局部变量只声明，不初始化 */
-    int type;       // getop()返回的取到的下一个操作符的类型
-    double op1,op2; // 遇到 "+-*/" 操作符，用来缓存从Stack里弹出的两个操作数
-    char s[MAXOP];  // 交给getop()取下一个操作符的数组容器
-
-    while ((type = getop(s)) != EOF) {
-        switch(type) {
-            case NUMBER:
-                push(atof(s));
-                break;
+    while ((c = getop(s)) != EOF) {
+        switch(c) {
+            case NUM:
+                push(atof(s)); break;
             case '+':
-                op2 = pop(); op1 = pop();
-                push(op1 + op2);
-                break;
+                push(pop() + pop()); break;
             case '-':
-                op2 = pop(); op1 = pop();
-                push(op1 - op2);
-                break;
+                y = pop(); x = pop();
+                push(x - y); break;
             case '*':
-                op2 = pop(); op1 = pop();
-                push(op1 * op2);
-                break;
+                push(pop() * pop()); break;
             case '/':
-                op2 = pop(); op1 = pop();
-                if (op2 != 0.0) {
-                    push(op1 / op2);
-                } else {
-                    printf("error: zero divisor\n");
+                y = pop();
+                if (y == 0) {
+                    printf("simplecalc: Zero cannot be used as divisor!\n");
+                    enter(); break;
                 }
-                break;
+                x = pop();
+                push(x / y); break;
             case '\n':
-                printf("\t%.8g\n",pop());
-                break;
+                printf("%.8f\n", pop()); break;
             default:
-                printf("error: unknown command %s\n",s);
+                printf("simplecalc: Commend <%c> Error!\n", c);
         }
     }
+}
+
+void enter(void) {
+    char c;
+    while ((c = getch()) != '\n') {
+        if (c == EOF) { ungetch(c); break; }
+    }
+    empty();
 }

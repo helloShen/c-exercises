@@ -1,7 +1,7 @@
-#define MAXVAL 100      // 栈最大深度
-
 /**
- * stack.c和stackexp.c共享栈内存
+ * 只有push()和pop()函数的最简单stack
+ * 拉出来以便被重用
  */
-int sp;                 // 栈当前元素指针
-double val[MAXVAL];     // 栈容器
+void push(double d);
+double pop(void);
+void empty(void);

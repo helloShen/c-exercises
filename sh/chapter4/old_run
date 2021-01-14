@@ -1,0 +1,333 @@
+#!/bin/sh
+
+######################################################
+#             !!! READ ME !!!
+# 
+# 这是老版练习，打包方式不够好
+# 
+# 新的chapter4的内容根据第二次练习的新打包方式
+# 结构更合理
+#
+# 注销掉部分注释，来执行编译和运行
+# 
+######################################################
+
+
+### basic parameters
+BASE_DIR="/Users/Wei/github/letsplayc"
+SRC_DIR="${BASE_DIR}/src"
+BIN_DIR="${BASE_DIR}/bin"
+TEST_DIR="${BASE_DIR}/test"
+
+### config (修改这部分参数以运行不同的练习）
+CHAPTER="old_chapter4"
+NAME="calc"
+SRC_FILE="${NAME}.c"
+BIN_FILE="${NAME}.o"
+
+
+### compile
+#gcc -iquote"${SRC_DIR}" -o "${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${SRC_DIR}/${CHAPTER}/${SRC_FILE}"
+
+### run
+#"${BIN_DIR}/${CHAPTER}/${BIN_FILE}" "${TEST_DIR}/${NAME}"
+
+###################################################
+#  标准计算器程序
+#	calc.h: 	这个计算器包的统一头文件
+#  	calc.c:		计算逻辑
+#	stack.c:	提供栈容器服务
+#	getop.c:	从输入读取下一个操作数或字符
+#	getch.c:	带缓冲区的读取下一个字符服务
+###################################################
+### path
+BIN="${BIN_DIR}/${CHAPTER}"
+SRC="${SRC_DIR}/${CHAPTER}"
+TEST="${TEST_DIR}/chapter4"
+
+### module
+CALC_C="${SRC}/calc.c"
+CALC_O="${BIN}/calc.o"
+
+STACK_C="${SRC}/stack.c"
+STACK_O="${BIN}/stack.o"
+
+GETOP_C="${SRC}/getop.c"
+GETOP_O="${BIN}/getop.o"
+
+GETCH_C="${SRC}/getch.c"
+GETCH_O="${BIN}/getch.o"
+
+### 分别编译4个库
+### -c 告诉编译器，这个文件没有main入口，只是库
+gcc -iquote"${SRC}" -c ${GETCH_C} -o ${GETCH_O}
+gcc -iquote"${SRC}" -c ${GETOP_C} -o ${GETOP_O} 
+gcc -iquote"${SRC}" -c ${STACK_C} -o ${STACK_O}
+gcc -iquote"${SRC}" -c ${CALC_C} -o ${CALC_O}
+
+### 链接成一个可执行文件
+## 书上的标准加减乘除计算器
+STDEXE="${BIN}/stdcalc.o"
+##编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${STDEXE} ${GETCH_O} ${GETOP_O} ${STACK_O} ${CALC_O} 
+
+### run
+STDTXT="${TEST}/stdcalc.txt"
+#${STDEXE} < ${STDTXT}
+
+###################################################
+#  4.3
+#  带取模运算的计算器程序添加两个组件：
+#  	modcalc.c:	添加对取模（%）运算的支持
+#	modgetop.c:	能处理负数
+###################################################
+
+### 新组件
+MCALC_C="${SRC}/4-3.c"
+MCALC_O="${BIN}/4-3.o"
+
+MGETOP_C="${SRC}/modgetop.c"
+MGETOP_O="${BIN}/modgetop.o"
+
+### 单独编译新组件
+gcc -iquote"${SRC}" -c ${MGETOP_C} -o ${MGETOP_O} 
+gcc -iquote"${SRC}" -c ${MCALC_C} -o ${MCALC_O}
+
+## 带%取模运算的计算器（便以前先取消主入口的注释）
+MODEXE="${BIN}/modcalc.o"
+## 编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${MODEXE} ${GETCH_O} ${GETOP_O} ${STACK_O} ${CALC_O} ${MCALC_O} ${MGETOP_O}
+
+### run
+MODTXT="${TEST}/modcalc.txt"
+#${MODEXE} < ${MODTXT}
+
+###################################################
+#  4.4
+#  扩展stack.c栈容器的功能
+#  	stackexp.c:
+#		printtop(): 打印栈顶元素
+#		seek(): 复制栈顶元素
+# 		swap(): 交换栈顶的两个元素
+#		clear(): 清空栈
+#  老的push()和pop()操作还是保留在stack.c
+#  stackexp.c只是stack.c的补丁，和stack.c共享内存
+###################################################
+
+### 新组件
+STACKEXP_C="${SRC}/stackexp.c"
+STACKEXP_O="${BIN}/stackexp.o"
+
+EXPSTACK_C="${SRC}/4-4.c"
+EXPSTACK_O="${BIN}/4-4.o"
+
+### 单独编译新组件
+#gcc -iquote"${SRC}" -c ${STACKEXP_C} -o ${STACKEXP_O}
+
+### 链接成一个可执行文件
+### 编译前先取消主入口的注释，然后注释掉其他主入口
+#gcc -iquote"${SRC}" -o ${EXPSTACK_O} ${STACK_O} ${STACKEXP_O} ${EXPSTACK_C}
+
+### 运行
+#${EXPSTACK_O}
+
+###################################################
+#  4.5
+#  扩展计算器功能:
+#	sin(x): 打印栈顶元素
+#	exp(x): 复制栈顶元素
+# 	pow(x,y): 交换栈顶的两个元素
+#  老的push()和pop()操作还是保留在stack.c
+#  stackexp.c只是stack.c的补丁，和stack.c共享内存
+###################################################
+
+### 新组件
+CALC45_C="${SRC}/4-5.c"
+CALC45_O="${BIN}/4-5.o"
+
+GETOP45_C="${SRC}/getop45.c"
+GETOP45_O="${BIN}/getop45.o"
+
+### 单独编译新组件
+#gcc -iquote"${SRC}" -c ${GETOP45_C} -o ${GETOP45_O}
+#gcc -iquote"${SRC}" -c ${CALC45_C} -o ${CALC45_O}
+
+### 链接成一个可执行文件
+### 编译前先取消主入口的注释，然后注释掉其他主入口
+EXEC_45="${SRC}/4-5.out"
+
+#gcc -iquote"${SRC}" -o ${EXEC_45} ${CALC45_O} ${GETOP45_O} ${STACK_O} ${STACKEXP_O} ${GETCH_O} 
+
+### 运行
+TEST45="${TEST}/4-5.txt"
+#${EXEC_45} < ${TEST45}
+
+
+
+###################################################
+#  4.6
+#  扩展计算器功能:
+#	[A-Z]: 变量符号
+#		"3 A =" 表示把3赋值给变量A
+#		"2 A +" 表示把2和变量A相加
+#	[v]: 寄存前一行的计算结果
+###################################################
+
+### 新组件
+CALC46_C="${SRC}/4-6.c"
+CALC46_O="${BIN}/4-6.o"
+
+GETOP46_C="${SRC}/getop46.c"
+GETOP46_O="${BIN}/getop46.o"
+
+### 单独编译新组件
+#gcc -iquote"${SRC}" -c ${GETOP46_C} -o ${GETOP46_O}
+#gcc -iquote"${SRC}" -c ${CALC46_C} -o ${CALC46_O}
+
+### 链接成一个可执行文件
+### 编译前先取消主入口的注释，然后注释掉其他主入口
+EXEC_46="${SRC}/4-6.out"
+
+#gcc -iquote"${SRC}" -o ${EXEC_46} ${CALC46_O} ${GETOP46_O} ${STACK_O} ${STACKEXP_O} ${GETCH_O} 
+#gcc -iquote"${SRC}" -o ${EXEC_46} ${CALC46_O} ${GETOP46_O} ${STACK_O} ${STACKEXP_O} ${GETCH_O} 
+
+### 运行
+TEST46="${TEST}/4-6.txt"
+#${EXEC_46} < ${TEST46}
+
+
+###################################################
+#
+# boot包：
+#
+# 回忆一下之前的工作，整理思路
+# 比书上例子更复杂一点，主要是能处理格式不正确的情况
+# 包含下面几个主要组件：
+#	bootcalc.h	// boot包的统一头文件
+# 	bootcalc.c	// 计算器主要逻辑
+#	bootgetop.c	// 负责从标准输入读取下一个操作数
+#	bootgetch.c	// 负责从标准输入读取下一个字符
+#	bootstack.c	// 计算器的缓存栈
+#
+###################################################
+
+### 封装为3层子程序
+# 逆波兰运算式计算逻辑
+BOOT_CALC_C="${SRC}/bootcalc.c"
+BOOT_CALC_H="${SRC}/bootcalc.h"
+BOOT_CALC_O="${BIN}/bootcalc.o"
+# 模拟stack
+BOOT_STACK_C="${SRC}/bootstack.c"
+BOOT_STACK_O="${BIN}/bootstack.o"
+# 负责读取下一个运算数或操作符
+BOOT_GETOP_C="${SRC}/bootgetop.c"
+BOOT_GETOP_O="${BIN}/bootgetop.o"
+# 只负责读取下一个字符(带缓冲槽）
+BOOT_GETCH_C="${SRC}/bootgetch.c"
+BOOT_GETCH_O="${BIN}/bootgetch.o"
+
+
+### 单独编译
+#gcc -iquote"${SRC}" -c ${BOOT_GETCH_C} -o ${BOOT_GETCH_O}
+#gcc -iquote"${SRC}" -c ${BOOT_GETOP_C} -o ${BOOT_GETOP_O}
+#gcc -iquote"${SRC}" -c ${BOOT_STACK_C} -o ${BOOT_STACK_O}
+#gcc -iquote"${SRC}" -c ${BOOT_CALC_C} -o ${BOOT_CALC_O}
+
+### 连接成可执行文件
+#BOOT="${BIN}/boot.o"
+
+#gcc -iquote"${SRC}" -o ${BOOT} ${BOOT_GETCH_O} ${BOOT_GETOP_O} ${BOOT_STACK_O} ${BOOT_CALC_O}
+
+### 测试运行
+#${BOOT} < ${STDTXT}
+
+
+######################################################
+#
+# simplecalc包
+# 复习和书上一模一样的简单计算
+# 不需要判断计算公式是否正确
+# 包含下面几个主要组件：
+#	simplecalc.h	// boot包的统一头文件
+# 	simplecalc.c	// 计算器主要逻辑
+#	simplegetop.c	// 负责从标准输入读取下一个操作数
+#	simplegetch.c	// 负责从标准输入读取下一个字符
+#	simplestack.c	// 计算器的缓存栈
+#
+#####################################################
+
+### 封装为3层子程序
+# 逆波兰运算式计算逻辑
+SIMP_CALC_C="${SRC}/simplecalc.c"
+SIMP_CALC_H="${SRC}/simplecalc.h"
+SIMP_CALC_O="${BIN}/simplecalc.o"
+# 模拟stack
+SIMP_STACK_C="${SRC}/simplestack.c"
+SIMP_STACK_O="${BIN}/simplestack.o"
+# 负责读取下一个运算数或操作符
+SIMP_GETOP_C="${SRC}/simplegetop.c"
+SIMP_GETOP_O="${BIN}/simplegetop.o"
+# 只负责读取下一个字符(带缓冲槽）
+SIMP_GETCH_C="${SRC}/simplegetch.c"
+SIMP_GETCH_O="${BIN}/simplegetch.o"
+
+
+### 单独编译
+#gcc -iquote"${SRC}" -c ${SIMP_GETCH_C} -o ${SIMP_GETCH_O}
+#gcc -iquote"${SRC}" -c ${SIMP_GETOP_C} -o ${SIMP_GETOP_O}
+#gcc -iquote"${SRC}" -c ${SIMP_STACK_C} -o ${SIMP_STACK_O}
+#gcc -iquote"${SRC}" -c ${SIMP_CALC_C} -o ${SIMP_CALC_O}
+
+### 连接成可执行文件
+SIMP="${BIN}/simple.o"
+SIMPTEST="${TEST}/simplecalc.txt"
+
+#gcc -iquote"${SRC}" -o ${SIMP} ${SIMP_GETCH_O} ${SIMP_GETOP_O} ${SIMP_STACK_O} ${SIMP_CALC_O}
+
+### 测试运行
+#${SIMP} < ${SIMPTEST}
+
+##########################################
+# 测试新4.4
+##########################################
+SIMP_STACK_C="${SRC}/simplestack.c"
+SIMP_STACK_O="${BIN}/simplestack.o"
+BETTER_STACK_C="${SRC}/betterstack.c"
+BETTER_STACK_O="${BIN}/betterstack.o"
+TESTBETTER_C="${SRC}/testbetterstack.c"
+TESTBETTER_O="${BIN}/testbetterstack.o"
+
+### 单独编译
+gcc -iquote"${SRC}" -c ${SIMP_STACK_C} -o ${SIMP_STACK_O}
+gcc -iquote"${SRC}" -c ${BETTER_STACK_C} -o ${BETTER_STACK_O}
+gcc -iquote"${SRC}" -c ${TESTBETTER_C} -o ${TESTBETTER_O}
+
+### 连接成可执行文件
+# 4.4 - 加了部分功能的simplestack
+BETTER="${BIN}/better.o"
+
+gcc -iquote"${SRC}" -o ${BETTER} ${TESTBETTER_O} ${SIMP_STACK_O} ${BETTER_STACK_O}
+
+### 运行
+#${BETTER}
+
+
+############################################
+# 4.5 - 加了sin()，exp()，pow()
+############################################
+### 目标文件
+SCIENCE_C="${SRC}/bettercalc.c"
+SCIENCE_O="${BIN}/bettercalc.o"
+SCI="${BIN}/science.o"
+NEWTEST45="${TEST}/new4-5.txt"
+
+### 局部编译
+gcc -iquote"${SRC}" -c ${SCIENCE_C} -o ${SCIENCE_O}
+
+### 链接
+gcc -iquote"${SRC}" -o ${SCI} ${SCIENCE_O} ${SIMP_STACK_O} ${BETTER_STACK_O} ${SIMP_GETOP_O} ${SIMP_GETCH_O}
+
+### 运行
+${SCI} < ${NEWTEST45}
+
+

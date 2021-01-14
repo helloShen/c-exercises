@@ -2,7 +2,7 @@
  * 还是传统的二分查找好。答案里的处理法可读性不好。
  * 而且性能也没有优化。
  *****************************************************/
-#include "mystd.h"
+#include <stdio.h>
 
 static int binsearch(int x, int v[], int n);
 

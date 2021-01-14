@@ -1,36 +1,32 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "stack.h"
+#include "stack.h"              // 相当于继承自stack.c
 
-/** 打印栈顶元素 */
+// stack.c中的全局变量。因为把他们在stack.h中定义不好，所以在这里重新声明。
+extern double stackbuff[];
+extern int stackp;
+
+/**
+ * stack plus
+ *  1. printtop()不弹出元素的情况下打印栈顶元素
+ *  2. copytop()复制栈顶元素
+ *  3. exchtop()交换栈顶2个元素的值
+ */
 void printtop(void) {
-    if (sp > 0) {
-        printf("Top Element: %g\n",val[sp-1]);
-    } else {
-        printf("Stack is empty!\n");
-    }
+    double d = 0.0;
+    if (stackp > 0) { d = stackbuff[stackp-1]; }
+    printf("top element = %f\n", d);
 }
 
-/** 复制栈顶元素 */
-double seek(void) {
-    if (sp > 0) {
-        return val[sp-1];
-    } else {
-        printf("Stack is empty!\n");
-        return 0.0;
-    }
+double copytop(void) {
+    double d = 0.0;
+    if (stackp > 0) { d = stackbuff[stackp-1]; }
+    return d;
 }
 
-/** 交换栈顶的两个元素。*/
-void swap() {
-    if (sp > 1) {
-        double temp = val[sp-2];
-        val[sp-2] = val[sp-1];
-        val[sp-1] = temp;
+void exchtop(void) {
+    if (stackp > 1) {
+        double temp = stackbuff[stackp-1];
+        stackbuff[stackp-1] = stackbuff[stackp-2];
+        stackbuff[stackp-2] = temp;
     }
-}
-
-/** 清空栈 */
-void clear() {
-    sp = 0;
 }

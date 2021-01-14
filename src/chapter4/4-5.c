@@ -1,81 +1,57 @@
+/**
+ * 科学计算器。
+ * 除了加减乘除，加了高级计算：
+ *       sin(): 正弦函数
+ *       exp(): 幂函数
+ *       pow(): 乘方运算
+ * 实际运算直接调用<math.h>的函数
+ * 关于<math.h>的细节，详见书后附录B.4
+ */
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "calc.h"
 
-/** define的字符常量，此文件范围都有效 */
-#define MAXOP 100   // 交给getop()函数去装下一个操作数的数组s的最大长度
 
-/** 服务接口在calc.h里声明 */
-
-/**
- * 主入口直接调用calc()服务
- * 编译的时候有其他主入口的时候，注销这个入口
- */
 int main(void) {
-    calc45();
-}
-
-/**
- * 计算一个算术式的结果，每一行记录是一个算数式（有回车就算一行）
- * 扩展能计算sin(x),exp(x),pow(x,y)
- */
-void calc45(void) {
-    /* 局部变量只声明，不初始化 */
-    int type;               // getop()返回的取到的下一个操作符的类型
-    double op1,op2;     // 遇到 "+-*/" 操作符，用来缓存从Stack里弹出的两个操作数
-    char s[MAXOP];          // 交给getop()取下一个操作符的数组容器
-
-    while ((type = getop45(s)) != EOF) {
-        switch(type) {
-            case NUMBER:
-                push(atof(s));
-                break;
+    int size = 100;     // 用来读取操作数的数组大小
+    char s[size];       // 存放读取到的操作数的数组
+    double x,y;
+    char c;
+    while ((c = getop(s)) != EOF) {
+        switch(c) {
+            case NUM:
+                push(atof(s)); break;
             case '+':
-                op2 = pop(); op1 = pop();
-                push(op1 + op2);
-                break;
+                push(pop() + pop()); break;
             case '-':
-                op2 = pop(); op1 = pop();
-                push(op1 - op2);
-                break;
+                y = pop();
+                push(pop() - y); break;
             case '*':
-                op2 = pop(); op1 = pop();
-                push(op1 * op2);
-                break;
+                push(pop() + pop()); break;
             case '/':
-                op2 = pop(); op1 = pop();
-                if (op2 != 0.0) {
-                    push(op1 / op2);
-                } else {
-                    printf("error: zero divisor\n");
+                y = pop();
+                if (y == 0.0) {
+                    printf("science calc: divisor cannot be zero!\n");
+                    empty(); break;
                 }
-                break;
-            case '%':
-                op2 = pop(); op1 = pop();
-                if (op2 != 0.0) {
-                    push(op1 - op1 / op2);
-                } else {
-                    printf("error: zero divisor\n");
+                push(pop() / y); break;
+            case 's':
+                push(sin(pop())); break;
+            case 'e':
+                push(exp(pop())); break;
+            case 'p':
+                y = pop(); x = pop();
+                if ((x == 0.0 && y <= 0) || (x < 0 && (ceil(y) != y))) {
+                    printf("science calc: pow() method cannot accept!\n");
+                    empty(); break;
                 }
-                break;
-            case SIN:
-                // printf("Sin function\n");
-                push(sin(pop()));
-                break;
-            case EXP:
-                // printf("Exp function\n");
-                push(exp(pop()));
-                break;
-            case POW:
-                // printf("Pow function\n");
-                op2 = pop(); op1 = pop();
-                push(pow(op1,op2));
-                break;
-            case ENTER:
-                printf("\t%.8g\n",pop());
-                break;
+                push(pow(x,y)); break;
+            case '\n':
+                printf("%f\n",pop()); empty(); break;
             default:
-                printf("error: unknown command [number:%s], [type:%d]\n",s,type);
+                printf("science calc: <%c> commend error!\n", c);
+                empty(); break;
         }
     }
 }

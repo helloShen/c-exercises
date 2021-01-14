@@ -1,4 +1,4 @@
-#include "mystd.h"
+#include <stdio.h>
 
 static void itoa(int n, char s[]);
 static void betterItoa(int n, char s[]);

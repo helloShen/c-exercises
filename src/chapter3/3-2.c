@@ -4,7 +4,7 @@
  * 这样做虽然在逻辑上没必要，但当我们需要向该switch语句后添加其他分之时，
  * 这种防范措施会降低犯错误的可能性。
  ************************************************************/
-#include "mystd.h"
+#include <stdio.h>
 
 static void escapeWhile(char *s, char* t);
 static void escapeFor(char *s, char* t);
