@@ -40,6 +40,7 @@ void testDouble(void) {
 void testString(void) {
 	char *strs[] = {"Abby", "Lee", "David", "Black", "Tom", "Kim", "Tim"};
 	gstack s;
+	/* no need to write as "&freeStr", compiler know it's a pointer to the function */
 	newGstack(&s, sizeof(char *), freeStr);
 	for (int i = 0; i < 7; i++) {
 		char *elemAddr = *(strs + i); 

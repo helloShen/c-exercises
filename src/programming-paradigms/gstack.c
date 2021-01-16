@@ -22,7 +22,7 @@ void disposeGstack(gstack *s) {
 	if (s->freeElem != NULL) {
 		while (s->ite > 0) {
 			void *elemAddr = (char *)s->elems + --s->ite * s->elemSize;
-			printf("to free address = %u\n", elemAddr);
+			//printf("to free address = %u\n", elemAddr);
 			s->freeElem(elemAddr);
 		}
 	}

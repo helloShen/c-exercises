@@ -175,8 +175,8 @@ static void TestReplace(vector *alphabet)
 
 /** 
  * Function: SimpleTest
- * --------------------
- * Exercises the vector when it stores characters.
+ * -------------------
+ * Exercises the vecto
  * Because characaters are small and don't have any
  * complicated memory requirements, this test is a
  * good starting point to see whether or not your vector
@@ -385,7 +385,7 @@ static void MemoryTest()
     questionWord = malloc(strlen(kQuestionWords[i]) + 1);
     strcpy(questionWord, kQuestionWords[i]);
     VectorInsert(&questionWords, &questionWord, 0);  // why the ampersand? isn't questionWord already a pointer?
-  }
+  
   
   fprintf(stdout, "Mapping over the char * vector (ask yourself: why are char **'s passed to PrintString?!!)\n");
   VectorMap(&questionWords, PrintString, stdout);
@@ -398,7 +398,7 @@ static void MemoryTest()
  * --------------
  * The enrty point into the test application.  The
  * first test is easy, the second one is medium, and
- 8 the final test is hard.
+ * the final test is hard.
  */
 
 int main(int ignored, char **alsoIgnored) 
