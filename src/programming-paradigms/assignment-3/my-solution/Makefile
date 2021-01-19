@@ -1,6 +1,29 @@
 #
-# Compile and test vector and hashset
+# Using 'gcc -MM' to automatically generate dependencies rules in a file: Makefile.dependencies
+# The following rules are generated:
+# 	vector.o: vector.c vector.h bool.h
+#	myvectortest.o: myvectortest.c vector.h bool.h
+#	vectortest.o: vectortest.c vector.h bool.h
 #
+# '-include' this file and system will know how to make .o object files.
+#
+# Add all .c .h source files to the prerequisites of this dependencies files, 
+# compiler will update it once any source files are changed.
+#
+# Add this dependencies file to prerequisites of all targets, will update executable 
+# application once this dependencies file is updated.
+#
+# Currently I feel confortable with this old-school version. There is another modern 
+# solution making use of '.d' files, please check 'Makefile_dot_d'
+# 
+# For more information please check these articles:
+# 	http://make.mad-scientist.net/papers/advanced-auto-dependency-generation/
+#	https://www.gnu.org/software/make/manual/html_node/Automatic-Prerequisites.html
+#	https://www.gnu.org/software/make/manual/html_node/Remaking-Makefiles.html#Remaking-Makefiles
+#
+# Here is my question about this topic on stackoverflow, some references are really helpful.
+#	https://stackoverflow.com/questions/65770067/about-stanford-cs107-assignment-makefile
+
 
 CC = gcc
 # 1. C11 is the newest version of C language
@@ -23,15 +46,12 @@ SRCS = $(VECTOR_SRCS) myvectortest.c vectortest.c
 HDRS = $(VECTOR_HDRS)
 OBJS = $(SRCS:.c=.o) 
 
-EXECUTABLES = my-vector-test vector-test
+EXES = myvectortest vectortest
 
-default: $(EXECUTABLES)
+DEP_DIR = ./deps
+DEP_FILE = $(DEP_DIR)/Makefile.dependencies
 
-my-vector-test: Makefile.dependencies $(MY_VECTOR_TEST_OBJS)
-	$(CC) $(CFLAGS) -o $@ $(MY_VECTOR_TEST_OBJS) $(LDFLAGS)
-
-vector-test: Makefile.dependencies $(VECTOR_TEST_OBJS)
-	$(CC) $(CFLAGS) -o $@ $(VECTOR_TEST_OBJS) $(LDFLAGS)
+default: $(EXES)
 
 # 1. The dependencies below make use of make's default rules,
 # under which a .o automatically depends on its .c and
@@ -41,15 +61,22 @@ vector-test: Makefile.dependencies $(VECTOR_TEST_OBJS)
 # 2. -MMD means write a dependencies file containing user headers.
 # -MM likes -MMD, but also implies -E only do preprocess,
 # and write to stand out by default.
+$(DEP_FILE): $(SRCS) $(HDRS) Makefile
+	$(CC) $(CFLAGS) -MM $(SRCS) $(LDFLAGS) > $(DEP_FILE)
 
-# 3. Professor add this is to show us what the implicit rules
-# look like. No efficiency purpose.
+-include $(DEP_FILE)
 
-Makefile.dependencies:: $(SRCS) $(HDRS)
-	$(CC) $(CFLAGS) -MM $(SRCS) > Makefile.dependencies 
+vectortest: $(VECTOR_TEST_OBJS) $(DEP_FILE)
+	$(CC) $(CFLAGS) -o $@ $(VECTOR_TEST_OBJS) $(LDFLAGS)
 
--include Makefile.dependencies
+myvectortest: $(MY_VECTOR_TEST_OBJS) $(DEP_FILE)
+	$(CC) $(CFLAGS) -o $@ $(MY_VECTOR_TEST_OBJS) $(LDFLAGS)
 
 .PHONY: clean
 clean:
-	-rm -fr $(EXECUTABLES) $(OBJS) Makefile.dependencies
+	-rm -f *.o  $(EXES) $(DEP_FILE)
+
+
+
+
+

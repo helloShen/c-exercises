@@ -32,7 +32,6 @@
 #define _vector_
 
 #include "bool.h"
-
 /**
  * Type: VectorCompareFunction
  * ---------------------------
