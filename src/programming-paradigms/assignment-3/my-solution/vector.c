@@ -10,10 +10,15 @@
 
 /**
  * Reallocate a new memory of twice of original size
+ * return 1 if reallocation success, otherwise return -1.
  */
 static void DoubleMemory(vector *v) {
+	void *tmp = realloc(v->elems, v->capacity * v->elemSize * 2);
+	assert(tmp != NULL);
+	v->elems = tmp;
 	v->capacity *= 2;
-	v->elems = realloc(v->elems, v->capacity);
+	// fprintf(stdout, "Vector space expand to %d.\n", v->capacity);
+	// fflush(stdout);
 }
 
 /**
@@ -21,7 +26,7 @@ static void DoubleMemory(vector *v) {
  */
 void VectorNew(vector *v, int elemSize, VectorFreeFunction freefn, int initialAllocation) {
 	v->elems = malloc(initialAllocation * elemSize);
-	assert(v->elems);
+	assert(v->elems != NULL);
 	v->elemSize = elemSize;
 	v->elemNum = 0;
 	v->capacity = initialAllocation;
@@ -65,9 +70,8 @@ void VectorInsert(vector *v, const void *elemAddr, int position) {
 	/* double size if neccessary */
 	if (v->elemNum == v->capacity) DoubleMemory(v);
 	void *posAddr = (char *)v->elems + position * v->elemSize;
-	assert(posAddr);
 	/* move following elements to the left by one element size */
-	if (position < v->elemNum) memmove(posAddr + v->elemSize, posAddr, (v->elemNum - position) * v->elemSize);
+	memmove((char *)posAddr + v->elemSize, posAddr, (v->elemNum - position) * v->elemSize);
 	memcpy(posAddr, elemAddr, v->elemSize);
 	v->elemNum++;
 }
@@ -76,6 +80,7 @@ void VectorInsert(vector *v, const void *elemAddr, int position) {
  * Appends a new element to the end of the specified vector.
  */
 void VectorAppend(vector *v, const void *elemAddr) {
+	/* double size if neccessary */
 	if (v->elemNum == v->capacity) DoubleMemory(v);
 	memcpy((char *)v->elems + v->elemNum * v->elemSize, elemAddr, v->elemSize);
 	v->elemNum++;
@@ -100,7 +105,7 @@ void VectorDelete(vector *v, int position) {
 	void *posAddr = (char *)v->elems + position * v->elemSize;
 	/* free the memory first */
 	if (v->freefn != NULL) v->freefn(posAddr);
-	if (position < v->elemNum - 1) memmove(posAddr, posAddr + v->elemSize, (v->elemNum - position) * v->elemSize);
+	memmove(posAddr, (char *)posAddr + v->elemSize, (v->elemNum - position) * v->elemSize);
 	v->elemNum--;
 }
 
@@ -115,11 +120,7 @@ int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchf
 		void *startAddr = (char *)v->elems + startIndex * v->elemSize;
 		int size = v->elemNum - startIndex;
 		void *resAddr = bsearch(key, startAddr, size, v->elemSize, searchfn);
-		if (resAddr != NULL) {
-			return ((char *)resAddr - (char *)v->elems) / v->elemSize;
-		} else {
-			return -1;
-		}
+		return (resAddr != NULL)? ((char *)resAddr - (char *)v->elems) / v->elemSize : -1;
 	} else {
 		/* linear search */
 		for (int i = 0; i < v->elemNum; i++) {
@@ -146,6 +147,5 @@ void VectorMap(vector *v, VectorMapFunction mapfn, void *auxData) {
 	assert(mapfn);
 	for (int i = 0; i < v->elemNum; i++) {
 		mapfn((char *)v->elems + i * v->elemSize, auxData);
-	}
+	} // No '\n' to the end. Caller can add it themself.
 }
-

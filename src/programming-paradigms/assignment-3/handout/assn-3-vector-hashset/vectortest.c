@@ -385,7 +385,7 @@ static void MemoryTest()
     questionWord = malloc(strlen(kQuestionWords[i]) + 1);
     strcpy(questionWord, kQuestionWords[i]);
     VectorInsert(&questionWords, &questionWord, 0);  // why the ampersand? isn't questionWord already a pointer?
-  
+  }
   
   fprintf(stdout, "Mapping over the char * vector (ask yourself: why are char **'s passed to PrintString?!!)\n");
   VectorMap(&questionWords, PrintString, stdout);

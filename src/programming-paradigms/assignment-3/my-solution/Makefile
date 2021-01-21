@@ -25,10 +25,11 @@
 #	https://stackoverflow.com/questions/65770067/about-stanford-cs107-assignment-makefile
 
 
-CC = gcc
 # 1. C11 is the newest version of C language
 # 2. -Wpointer-arith request a warning when addtion and subtraction are done
 # on pointers to void and to functions, which is supported in GNU C.
+
+CC = gcc
 CFLAGS = -g -Wall -std=gnu11 -Wpointer-arith
 LDFLAGS = 
 
@@ -51,28 +52,31 @@ EXES = myvectortest vectortest
 DEP_DIR = ./deps
 DEP_FILE = $(DEP_DIR)/Makefile.dependencies
 
+
+.PHONY: default depend clean
+
 default: $(EXES)
 
 # 1. The dependencies below make use of make's default rules,
 # under which a .o automatically depends on its .c and
 # the action taken uses the $(CC) and $(CFLAGS) variables.
 # These lines describe a few extra dependencies involved.
-
+#
 # 2. -MMD means write a dependencies file containing user headers.
 # -MM likes -MMD, but also implies -E only do preprocess,
 # and write to stand out by default.
-$(DEP_FILE): $(SRCS) $(HDRS) Makefile
+
+depend:: $(SRCS) $(HDRS) 
 	$(CC) $(CFLAGS) -MM $(SRCS) $(LDFLAGS) > $(DEP_FILE)
 
 -include $(DEP_FILE)
 
-vectortest: $(VECTOR_TEST_OBJS) $(DEP_FILE)
+vectortest: $(VECTOR_TEST_OBJS) depend
 	$(CC) $(CFLAGS) -o $@ $(VECTOR_TEST_OBJS) $(LDFLAGS)
 
-myvectortest: $(MY_VECTOR_TEST_OBJS) $(DEP_FILE)
+myvectortest: $(MY_VECTOR_TEST_OBJS) depend
 	$(CC) $(CFLAGS) -o $@ $(MY_VECTOR_TEST_OBJS) $(LDFLAGS)
 
-.PHONY: clean
 clean:
 	-rm -f *.o  $(EXES) $(DEP_FILE)
 
