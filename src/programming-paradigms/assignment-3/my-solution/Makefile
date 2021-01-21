@@ -43,11 +43,21 @@ MY_VECTOR_TEST_OBJS = $(MY_VECTOR_TEST_SRCS:.c=.o)
 VECTOR_TEST_SRCS = vectortest.c $(VECTOR_SRCS)
 VECTOR_TEST_OBJS = $(VECTOR_TEST_SRCS:.c=.o)
 
-SRCS = $(VECTOR_SRCS) myvectortest.c vectortest.c
-HDRS = $(VECTOR_HDRS)
-OBJS = $(SRCS:.c=.o) 
+HASHSET_SRCS = hashset.c vector.c
+HASHSET_HDRS = hashset.h vector.h
+HASHSET_OBJS = $(HASHSET_SRCS:.c=.o)
 
-EXES = myvectortest vectortest
+HASHSET_TEST_SRCS = hashsettest.c $(HASHSET_SRCS)
+HASHSET_TEST_OBJS = $(HASHSET_TEST_SRCS:.c=.o)
+
+SRCS = $(VECTOR_SRCS) myvectortest.c vectortest.c \
+	   $(HASHSET_SRCS) hashsettest.c
+HDRS = $(VECTOR_HDRS) \
+	   $(HASHSET_HDRS)
+OBJS = $(SRCS:.c=.o)
+
+EXES = myvectortest vectortest \
+	   hashsettest
 
 DEP_DIR = ./deps
 DEP_FILE = $(DEP_DIR)/Makefile.dependencies
@@ -76,6 +86,9 @@ vectortest: $(VECTOR_TEST_OBJS) depend
 
 myvectortest: $(MY_VECTOR_TEST_OBJS) depend
 	$(CC) $(CFLAGS) -o $@ $(MY_VECTOR_TEST_OBJS) $(LDFLAGS)
+
+hashsettest: $(HASHSET_TEST_OBJS) depend
+	$(CC) $(CFLAGS) -o $@ $(HASHSET_TEST_OBJS) $(LDFLAGS)
 
 clean:
 	-rm -f *.o  $(EXES) $(DEP_FILE)

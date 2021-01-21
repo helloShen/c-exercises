@@ -113,7 +113,8 @@ void VectorDelete(vector *v, int position) {
  * Search the specified vector for an element whose contents match the element passed as the key.
  */
 int VectorSearch(const vector *v, const void *key, VectorCompareFunction searchfn, int startIndex, bool isSorted) {
-	assert(key && searchfn);	
+	assert(key && searchfn);
+	if (v->elemNum == 0) return -1;
 	assert(startIndex >= 0 && startIndex < v->elemNum);
 	if (isSorted) {
 		/* binary search */
