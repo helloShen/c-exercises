@@ -50,17 +50,34 @@ HASHSET_OBJS = $(HASHSET_SRCS:.c=.o)
 HASHSET_TEST_SRCS = hashsettest.c $(HASHSET_SRCS)
 HASHSET_TEST_OBJS = $(HASHSET_TEST_SRCS:.c=.o)
 
+ST_SRCS = streamtokenizer.c
+ST_HDRS = $(ST_SRCS:.c=.h)
+ST_OBJS = $(ST_SRCS:.c=.o)
+
+ST_TEST_SRCS = streamtokenizer-test.c $(ST_SRCS)
+ST_TEST_OBJS = $(ST_TEST_SRCS:.c=.o)
+
+TEMP_TEST_SRCS = temptest.c
+TEMP_TEST_OBJS = $(TEMP_TEST_SRCS:.c=.o)
+
 SRCS = $(VECTOR_SRCS) myvectortest.c vectortest.c \
-	   $(HASHSET_SRCS) hashsettest.c
+	   $(HASHSET_SRCS) hashsettest.c \
+	   $(ST_SRCS) streamtokenizer-test.c \
+	   $(TEMP_TEST_SRCS)
 HDRS = $(VECTOR_HDRS) \
-	   $(HASHSET_HDRS)
+	   $(HASHSET_HDRS) \
+	   $(ST_HDRS) \
+	   $(ST_TEST_HDRS)
 OBJS = $(SRCS:.c=.o)
 
 EXES = myvectortest vectortest \
-	   hashsettest
+	   hashsettest \
+	   streamtokenizer-test \
+	   temptest
 
 DEP_DIR = ./deps
 DEP_FILE = $(DEP_DIR)/Makefile.dependencies
+
 
 
 .PHONY: default depend clean
@@ -89,6 +106,12 @@ myvectortest: $(MY_VECTOR_TEST_OBJS) depend
 
 hashsettest: $(HASHSET_TEST_OBJS) depend
 	$(CC) $(CFLAGS) -o $@ $(HASHSET_TEST_OBJS) $(LDFLAGS)
+
+streamtokenizer-test: $(ST_TEST_OBJS) depend
+	$(CC) $(CFLAGS) -o $@ $(ST_TEST_OBJS) $(LDFLAGS)
+
+temptest: $(TEMP_TEST_OBJS) depend
+	$(CC) $(CFLAGS) -o $@ $(TEMP_TEST_OBJS) $(LDFLAGS)
 
 clean:
 	-rm -f *.o  $(EXES) $(DEP_FILE)
